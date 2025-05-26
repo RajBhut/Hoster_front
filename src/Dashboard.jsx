@@ -7,22 +7,24 @@ const data = [
     name: "Project A",
     status: "Deployed",
     url: "https://project-a.example.com",
-    id: 1
-
+    states: 1,
+    id: 1,
   },
   {
     username: "user2",
     name: "Project B",
     status: "Pending",
     url: "",
-    id: 2
+    states: 1,
+    id: 2,
   },
   {
     username: "user3",
     name: "Project C",
     status: "Failed",
     url: "",
-    id: 3
+    states: 1,
+    id: 3,
   },
 ];
 
