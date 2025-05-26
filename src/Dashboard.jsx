@@ -6,22 +6,21 @@ const data = [
     name: "Project A",
     status: "Deployed",
     url: "https://project-a.example.com",
-    states: 1
-
+    states: 1,
   },
   {
     username: "user2",
     name: "Project B",
     status: "Pending",
     url: "",
-    states: 1
+    states: 1,
   },
   {
     username: "user3",
     name: "Project C",
     status: "Failed",
     url: "",
-    states: 1
+    states: 1,
   },
 ];
 
