@@ -1,12 +1,12 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 const data = [
   {
     username: "user1",
     name: "Project A",
     status: "Deployed",
     url: "https://project-a.example.com",
-    states: 1
+    id: 1
 
   },
   {
@@ -14,14 +14,14 @@ const data = [
     name: "Project B",
     status: "Pending",
     url: "",
-    states: 1
+    id: 2
   },
   {
     username: "user3",
     name: "Project C",
     status: "Failed",
     url: "",
-    states: 1
+    id: 3
   },
 ];
 
@@ -60,9 +60,11 @@ export default function Dashboard() {
                 )}
               </td>
               <td className="px-4 py-2 border">
-                <button className="px-3 py-1 font-semibold text-white bg-green-500 rounded hover:bg-green-600">
-                  Analyse
-                </button>
+                <Link to={`/state/${project.id}`}>
+                  <button className="px-3 py-1 font-semibold text-white bg-green-500 rounded hover:bg-green-600">
+                    Analyse
+                  </button>
+                </Link>
               </td>
             </tr>
           ))}
