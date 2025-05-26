@@ -79,7 +79,6 @@ const App = () => {
         console.log("Server is unavailable, using mock data");
         setIsServerDown(true);
 
-        // Use mock data instead
         setuser(MOCK_DATA.user);
         setRepos(MOCK_DATA.user.repos || []);
         setDeployedProjects(MOCK_DATA.deployedProjects);
@@ -259,8 +258,8 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg">
+    <div className="min-h-screen bg-gray-900">
+      <header className="bg-gradient-to-r from-gray-800 to-gray-900 text-white shadow-lg border-b border-gray-700">
         <div className="container mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <div className="flex items-center space-x-3">
             <h1 className="text-2xl font-bold">GitHub Auto Deployer</h1>
@@ -272,13 +271,13 @@ const App = () => {
                 <img
                   src={user.avatar}
                   alt="Avatar"
-                  className="w-10 h-10 rounded-full border-2 border-white"
+                  className="w-10 h-10 rounded-full border-2 border-gray-600"
                 />
                 <span className="ml-2 font-medium">{user.username}</span>
               </div>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-colors duration-200"
+                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors duration-200 border border-gray-600"
               >
                 Logout
               </button>
@@ -289,11 +288,11 @@ const App = () => {
 
       <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
         {isServerDown && (
-          <div className="mb-8 bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg shadow-sm">
+          <div className="mb-8 bg-gray-800 border-l-4 border-amber-500 p-4 rounded-r-lg shadow-sm">
             <div className="flex items-center">
               <div className="flex-shrink-0"></div>
               <div className="ml-3">
-                <p className="text-sm text-amber-700">
+                <p className="text-sm text-amber-300">
                   Server is currently offline. Using mock data for demonstration
                   purposes.
                 </p>
@@ -304,16 +303,16 @@ const App = () => {
 
         {!user ? (
           <div className="flex flex-col items-center justify-center py-12">
-            <div className="bg-white p-8 rounded-xl shadow-md max-w-md w-full text-center">
-              <h2 className="mt-6 text-2xl font-bold text-gray-900">
+            <div className="bg-gray-800 border border-gray-700 p-8 rounded-xl shadow-md max-w-md w-full text-center">
+              <h2 className="mt-6 text-2xl font-bold text-white">
                 Welcome to Hoster
               </h2>
-              <p className="mt-2 text-gray-600">
+              <p className="mt-2 text-gray-300">
                 Deploy your GitHub repositories with ease
               </p>
               <button
                 onClick={handleLogin}
-                className="mt-8 w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="mt-8 w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-gray-800"
               >
                 Login with GitHub
               </button>
@@ -321,10 +320,10 @@ const App = () => {
           </div>
         ) : (
           <div className="space-y-8">
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+            <div className="bg-gray-800 border border-gray-700 rounded-xl shadow-md overflow-hidden">
               <div className="md:flex">
                 <div className="p-6 md:p-8 w-full">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-6">
+                  <h2 className="text-xl font-semibold text-white mb-6">
                     Deploy a Repository
                   </h2>
 
@@ -332,7 +331,7 @@ const App = () => {
                     <div>
                       <label
                         htmlFor="repo-select"
-                        className="block text-sm font-medium text-gray-700 mb-1"
+                        className="block text-sm font-medium text-gray-300 mb-1"
                       >
                         Select Repository
                       </label>
@@ -341,7 +340,7 @@ const App = () => {
                           id="repo-select"
                           onChange={(e) => setSelectedRepo(e.target.value)}
                           value={selectedRepo}
-                          className="flex-grow block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          className="flex-grow block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         >
                           <option value="">-- Choose a repository --</option>
                           {repos.map((repo, index) => (
@@ -355,7 +354,7 @@ const App = () => {
                           disabled={isLoading || !selectedRepo}
                           className={`flex items-center justify-center px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
                             isLoading || !selectedRepo
-                              ? "bg-indigo-300 cursor-not-allowed"
+                              ? "bg-indigo-400 cursor-not-allowed"
                               : "bg-indigo-600 hover:bg-indigo-700"
                           }`}
                         >
@@ -369,10 +368,10 @@ const App = () => {
                     <div
                       className={`mt-6 p-3 rounded-md ${
                         deployStatus.includes("✅")
-                          ? "bg-green-50 text-green-700"
+                          ? "bg-green-900 text-green-300 border border-green-700"
                           : deployStatus.includes("❌")
-                          ? "bg-red-50 text-red-700"
-                          : "bg-blue-50 text-blue-700"
+                          ? "bg-red-900 text-red-300 border border-red-700"
+                          : "bg-blue-900 text-blue-300 border border-blue-700"
                       }`}
                     >
                       {deployStatus}
@@ -383,10 +382,10 @@ const App = () => {
             </div>
 
             {/* Deployed Projects Section */}
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+            <div className="bg-gray-800 border border-gray-700 rounded-xl shadow-md overflow-hidden">
               <div className="p-6 md:p-8">
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold text-gray-800">
+                  <h2 className="text-xl font-semibold text-white">
                     Deployed Projects
                   </h2>
 
@@ -411,21 +410,21 @@ const App = () => {
                         type="text"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="block w-full rounded-md bg-gray-700 border-gray-600 text-white pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder-gray-400"
                         placeholder="Search projects..."
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="border-b border-gray-200 mb-6">
+                <div className="border-b border-gray-700 mb-6">
                   <nav className="-mb-px flex space-x-8">
                     <button
                       onClick={() => setActiveTab("deployed")}
                       className={`whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm ${
                         activeTab === "deployed"
-                          ? "border-indigo-500 text-indigo-600"
-                          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                          ? "border-indigo-500 text-indigo-400"
+                          : "border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-600"
                       }`}
                     >
                       All Projects
@@ -434,8 +433,8 @@ const App = () => {
                       onClick={() => setActiveTab("online")}
                       className={`whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm ${
                         activeTab === "online"
-                          ? "border-indigo-500 text-indigo-600"
-                          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                          ? "border-indigo-500 text-indigo-400"
+                          : "border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-600"
                       }`}
                     >
                       Online
@@ -444,8 +443,8 @@ const App = () => {
                       onClick={() => setActiveTab("maintenance")}
                       className={`whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm ${
                         activeTab === "maintenance"
-                          ? "border-indigo-500 text-indigo-600"
-                          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                          ? "border-indigo-500 text-indigo-400"
+                          : "border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-600"
                       }`}
                     >
                       Maintenance
@@ -478,42 +477,42 @@ const App = () => {
                   </div>
                 ) : filteredProjects.length > 0 ? (
                   <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50">
+                    <table className="min-w-full divide-y divide-gray-700">
+                      <thead className="bg-gray-700">
                         <tr>
                           <th
                             scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
                           >
                             Project
                           </th>
                           <th
                             scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
                           >
                             URL
                           </th>
                           <th
                             scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
                           >
                             Status
                           </th>
                           <th
                             scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
                           >
                             Last Deployed
                           </th>
                           <th
                             scope="col"
-                            className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider"
                           >
                             Actions
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
+                      <tbody className="bg-gray-800 divide-y divide-gray-700">
                         {filteredProjects
                           .filter(
                             (project) =>
@@ -521,12 +520,12 @@ const App = () => {
                               project.status === activeTab
                           )
                           .map((project) => (
-                            <tr key={project.id} className="hover:bg-gray-50">
+                            <tr key={project.id} className="hover:bg-gray-750">
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <div className="flex items-center">
-                                  <div className="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-md flex items-center justify-center">
+                                  <div className="flex-shrink-0 h-10 w-10 bg-indigo-900 rounded-md flex items-center justify-center">
                                     <svg
-                                      className="h-6 w-6 text-indigo-600"
+                                      className="h-6 w-6 text-indigo-400"
                                       fill="none"
                                       viewBox="0 0 24 24"
                                       stroke="currentColor"
@@ -540,10 +539,10 @@ const App = () => {
                                     </svg>
                                   </div>
                                   <div className="ml-4">
-                                    <div className="text-sm font-medium text-gray-900">
+                                    <div className="text-sm font-medium text-white">
                                       {project.name}
                                     </div>
-                                    <div className="text-sm text-gray-500">
+                                    <div className="text-sm text-gray-400">
                                       {project.buildDir}
                                     </div>
                                   </div>
@@ -554,7 +553,7 @@ const App = () => {
                                   href={"http://" + project.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-sm text-indigo-600 hover:text-indigo-900 hover:underline"
+                                  className="text-sm text-indigo-400 hover:text-indigo-300 hover:underline"
                                 >
                                   {project.url}
                                 </a>
@@ -563,10 +562,10 @@ const App = () => {
                                 <span
                                   className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                                     project.status === "online"
-                                      ? "bg-green-100 text-green-800"
+                                      ? "bg-green-900 text-green-300 border border-green-700"
                                       : project.status === "maintenance"
-                                      ? "bg-yellow-100 text-yellow-800"
-                                      : "bg-red-100 text-red-800"
+                                      ? "bg-yellow-900 text-yellow-300 border border-yellow-700"
+                                      : "bg-red-900 text-red-300 border border-red-700"
                                   }`}
                                 >
                                   {project.status === "online" && (
@@ -599,7 +598,7 @@ const App = () => {
                                   {project.status}
                                 </span>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                                 {project.deployedAt
                                   ? formatDate(project.deployedAt)
                                   : "Unknown"}
@@ -610,7 +609,7 @@ const App = () => {
                                     onClick={() =>
                                       handleRedeployProject(project.id)
                                     }
-                                    className="text-indigo-600 hover:text-indigo-900"
+                                    className="text-indigo-400 hover:text-indigo-300"
                                     title="Redeploy"
                                   >
                                     <svg
@@ -630,7 +629,7 @@ const App = () => {
                                     onClick={() =>
                                       handleDeleteProject(project.id)
                                     }
-                                    className="text-red-600 hover:text-red-900"
+                                    className="text-red-400 hover:text-red-300"
                                     title="Delete"
                                   >
                                     <svg
@@ -656,7 +655,7 @@ const App = () => {
                 ) : (
                   <div className="text-center py-8">
                     <svg
-                      className="mx-auto h-12 w-12 text-gray-300"
+                      className="mx-auto h-12 w-12 text-gray-500"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -668,10 +667,10 @@ const App = () => {
                         d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
                       />
                     </svg>
-                    <h3 className="mt-2 text-sm font-medium text-gray-900">
+                    <h3 className="mt-2 text-sm font-medium text-white">
                       No projects found
                     </h3>
-                    <p className="mt-1 text-sm text-gray-500">
+                    <p className="mt-1 text-sm text-gray-400">
                       Get started by deploying your first project.
                     </p>
                   </div>
@@ -683,11 +682,11 @@ const App = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white">
+      <footer className="bg-gray-800 border-t border-gray-700">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="border-t border-gray-200 pt-8 md:flex md:items-center md:justify-between">
+          <div className="border-t border-gray-700 pt-8 md:flex md:items-center md:justify-between">
             <div className="flex space-x-6 md:order-2">
-              <a href="#" className="text-gray-400 hover:text-gray-500">
+              <a href="#" className="text-gray-400 hover:text-gray-300">
                 <span className="sr-only">GitHub</span>
                 <svg
                   className="h-6 w-6"
