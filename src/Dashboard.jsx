@@ -28,24 +28,34 @@ const data = [
   },
 ];
 
-const ITEMS_PER_PAGE = 5; // Or any number you prefer
+const ITEMS_PER_PAGE = 5;
+const STATUS_OPTIONS = ["All", "Deployed", "Pending", "Failed"];
 
 export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState("All"); // New state for status filter
 
   const sortedAndFilteredData = useMemo(() => {
-    let filteredData = [...data]; // Create a new array to avoid mutating the original
+    let filteredData = [...data];
+
+    // Apply status filter
+    if (statusFilter !== "All") {
+      filteredData = filteredData.filter(project => project.status === statusFilter);
+    }
+
+    // Apply search term filter
     if (searchTerm) {
       filteredData = filteredData.filter(
         (project) =>
           project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           project.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          project.status.toLowerCase().includes(searchTerm.toLowerCase())
+          project.status.toLowerCase().includes(searchTerm.toLowerCase()) // Keep this for broader search within filtered status
       );
     }
 
+    // Apply sorting
     if (sortConfig.key) {
       filteredData.sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -58,7 +68,7 @@ export default function Dashboard() {
       });
     }
     return filteredData;
-  }, [searchTerm, sortConfig]);
+  }, [searchTerm, sortConfig, statusFilter]); // Add statusFilter to dependencies
 
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -89,87 +99,106 @@ export default function Dashboard() {
     }
   };
 
+  const handleStatusFilterChange = (status) => {
+    setStatusFilter(status);
+    setCurrentPage(1); // Reset to first page on filter change
+  };
+
   return (
-    <div className="min-h-screen p-4 bg-gray-100 md:p-8">
+    <div className="min-h-screen p-4 font-mono text-gray-300 bg-gray-900 md:p-8">
       <header className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-800 md:text-3xl">Project Status Dashboard</h1>
+        <h1 className="text-2xl font-bold text-white md:text-3xl">Project Status Dashboard</h1>
       </header>
 
-      <div className="flex flex-col items-center justify-between gap-4 mb-6 sm:flex-row">
+      {/* Search and Filter Section */}
+      <div className="mb-6 space-y-4 md:space-y-0 md:flex md:items-center md:justify-between">
         <input
           type="text"
-          placeholder="Search projects (name, user, status)..."
-          className="w-full p-3 transition-shadow border border-gray-300 rounded-lg shadow-sm sm:w-1/2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          placeholder="Search projects..."
+          className="w-full p-3 text-white placeholder-gray-400 transition-all duration-300 ease-in-out bg-gray-700 border-gray-600 rounded-lg shadow-sm md:w-1/3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-600 focus:shadow-lg"
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
-            setCurrentPage(1); // Reset to first page on search
+            setCurrentPage(1);
           }}
         />
-        {/* Future: Add more filters or actions here if needed */}
+        <div className="flex items-center justify-center space-x-2 md:justify-end">
+          {STATUS_OPTIONS.map((status) => (
+            <button
+              key={status}
+              onClick={() => handleStatusFilterChange(status)}
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ease-in-out hover:shadow-md hover:scale-105 ${statusFilter === status
+                  ? "bg-indigo-600 text-white shadow-lg scale-105"
+                  : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                }`}
+            >
+              {status}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="overflow-x-auto bg-white shadow-lg rounded-xl">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-gray-800 border border-gray-700 shadow-2xl rounded-xl">
+        <table className="min-w-full divide-y divide-gray-700">
+          <thead className="bg-gray-700">
             <tr>
-              <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase transition-colors cursor-pointer hover:bg-gray-100" onClick={() => requestSort('username')}>
+              <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left text-gray-300 uppercase transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-600" onClick={() => requestSort('username')}>
                 Username <SortIndicator columnKey="username" />
               </th>
-              <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase transition-colors cursor-pointer hover:bg-gray-100" onClick={() => requestSort('name')}>
+              <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left text-gray-300 uppercase transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-600" onClick={() => requestSort('name')}>
                 Name <SortIndicator columnKey="name" />
               </th>
-              <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase transition-colors cursor-pointer hover:bg-gray-100" onClick={() => requestSort('status')}>
+              <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left text-gray-300 uppercase transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-600" onClick={() => requestSort('status')}>
                 Status <SortIndicator columnKey="status" />
               </th>
-              <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">URL</th>
-              <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">States</th>
+              <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">URL</th>
+              <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">States</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-gray-800 divide-y divide-gray-700">
             {paginatedData.length > 0 ? (
               paginatedData.map((project) => (
-                <tr key={project.id} className="transition-colors hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">{project.username}</td>
-                  <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">{project.name}</td>
+                <tr key={project.id} className="transition-all duration-300 ease-in-out hover:bg-gray-700 hover:shadow-md hover:scale-[1.01]">
+                  <td className="px-6 py-4 text-sm text-gray-300 whitespace-nowrap">{project.username}</td>
+                  <td className="px-6 py-4 text-sm text-gray-300 whitespace-nowrap">{project.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold leading-tight ${project.status === "Deployed"
-                          ? "bg-green-100 text-green-700"
-                          : project.status === "Pending"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : "bg-red-100 text-red-700"
+                        ? "bg-green-900 text-green-300 border border-green-700"
+                        : project.status === "Pending"
+                          ? "bg-yellow-900 text-yellow-300 border border-yellow-700"
+                          : "bg-red-900 text-red-300 border border-red-700"
                         }`}
                     >
                       {project.status === "Deployed" && (
-                        <svg className="w-2.5 h-2.5 mr-1.5 text-green-500" fill="currentColor" viewBox="0 0 8 8"> <circle cx="4" cy="4" r="3" /> </svg>
+                        <svg className="w-2.5 h-2.5 mr-1.5 text-green-400" fill="currentColor" viewBox="0 0 8 8"> <circle cx="4" cy="4" r="3" /> </svg>
                       )}
                       {project.status === "Pending" && (
-                        <svg className="w-2.5 h-2.5 mr-1.5 text-yellow-500" fill="currentColor" viewBox="0 0 8 8"> <circle cx="4" cy="4" r="3" /> </svg>
+                        <svg className="w-2.5 h-2.5 mr-1.5 text-yellow-400" fill="currentColor" viewBox="0 0 8 8"> <circle cx="4" cy="4" r="3" /> </svg>
                       )}
                       {project.status === "Failed" && (
-                        <svg className="w-2.5 h-2.5 mr-1.5 text-red-500" fill="currentColor" viewBox="0 0 8 8"> <circle cx="4" cy="4" r="3" /> </svg>
+                        <svg className="w-2.5 h-2.5 mr-1.5 text-red-400" fill="currentColor" viewBox="0 0 8 8"> <circle cx="4" cy="4" r="3" /> </svg>
                       )}
                       {project.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
+                  <td className="px-6 py-4 text-sm text-gray-300 whitespace-nowrap">
                     {project.url ? (
                       <a
                         href={project.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-medium text-indigo-600 transition-colors hover:text-indigo-800 hover:underline"
+                        className="font-medium text-indigo-400 transition-colors hover:text-indigo-300 hover:underline"
                       >
                         Visit Site
                       </a>
                     ) : (
-                      <span className="text-gray-400">-</span>
+                      <span className="text-gray-500">-</span>
                     )}
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
                     <Link to={`/state/${project.id}`}>
-                      <button className="px-4 py-2 text-sm font-medium text-white transition-all bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                      <button className="px-4 py-2 text-sm font-medium text-white transition-all duration-300 ease-in-out bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-500 hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800">
                         Analyse
                       </button>
                     </Link>
@@ -192,7 +221,7 @@ export default function Dashboard() {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="px-4 py-2 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 text-sm font-medium text-gray-300 transition-all duration-300 ease-in-out bg-gray-700 border border-gray-600 rounded-md shadow-sm hover:bg-gray-600 hover:shadow-md hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Previous
           </button>
@@ -200,9 +229,9 @@ export default function Dashboard() {
             <button
               key={page}
               onClick={() => handlePageChange(page)}
-              className={`px-4 py-2 text-sm font-medium border rounded-md shadow-sm transition-colors ${currentPage === page
-                  ? "bg-indigo-600 text-white border-indigo-600"
-                  : "text-gray-700 bg-white border-gray-300 hover:bg-gray-50"
+              className={`px-4 py-2 text-sm font-medium border rounded-md shadow-sm transition-all duration-300 ease-in-out hover:shadow-md hover:scale-105 ${currentPage === page
+                ? "bg-indigo-600 text-white border-indigo-500 scale-105 shadow-lg"
+                : "text-gray-300 bg-gray-700 border-gray-600 hover:bg-gray-600"
                 }`}
             >
               {page}
@@ -211,7 +240,7 @@ export default function Dashboard() {
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 text-sm font-medium text-gray-300 transition-all duration-300 ease-in-out bg-gray-700 border border-gray-600 rounded-md shadow-sm hover:bg-gray-600 hover:shadow-md hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
           </button>
