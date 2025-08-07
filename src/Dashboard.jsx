@@ -33,16 +33,21 @@ const STATUS_OPTIONS = ["All", "Deployed", "Pending", "Failed"];
 
 export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: "ascending",
+  });
   const [currentPage, setCurrentPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState("All"); // New state for status filter
+  const [statusFilter, setStatusFilter] = useState("All"); 
 
   const sortedAndFilteredData = useMemo(() => {
     let filteredData = [...data];
 
     // Apply status filter
     if (statusFilter !== "All") {
-      filteredData = filteredData.filter(project => project.status === statusFilter);
+      filteredData = filteredData.filter(
+        (project) => project.status === statusFilter
+      );
     }
 
     // Apply search term filter
@@ -59,10 +64,10 @@ export default function Dashboard() {
     if (sortConfig.key) {
       filteredData.sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
+          return sortConfig.direction === "ascending" ? -1 : 1;
         }
         if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
+          return sortConfig.direction === "ascending" ? 1 : -1;
         }
         return 0;
       });
@@ -78,17 +83,17 @@ export default function Dashboard() {
   const totalPages = Math.ceil(sortedAndFilteredData.length / ITEMS_PER_PAGE);
 
   const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
     }
     setSortConfig({ key, direction });
-    setCurrentPage(1); // Reset to first page on sort
+    setCurrentPage(1); 
   };
 
   const SortIndicator = ({ columnKey }) => {
     if (sortConfig.key === columnKey) {
-      return sortConfig.direction === 'ascending' ? ' \u2191' : ' \u2193'; // Up and Down arrows
+      return sortConfig.direction === "ascending" ? " \u2191" : " \u2193";
     }
     return null;
   };
@@ -107,7 +112,9 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen p-4 font-mono text-gray-300 bg-gray-900 md:p-8">
       <header className="mb-8">
-        <h1 className="text-2xl font-bold text-white md:text-3xl">Project Status Dashboard</h1>
+        <h1 className="text-2xl font-bold text-white md:text-3xl">
+          Project Status Dashboard
+        </h1>
       </header>
 
       {/* Search and Filter Section */}
@@ -127,10 +134,11 @@ export default function Dashboard() {
             <button
               key={status}
               onClick={() => handleStatusFilterChange(status)}
-              className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ease-in-out hover:shadow-md hover:scale-105 ${statusFilter === status
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ease-in-out hover:shadow-md hover:scale-105 ${
+                statusFilter === status
                   ? "bg-indigo-600 text-white shadow-lg scale-105"
                   : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                }`}
+              }`}
             >
               {status}
             </button>
@@ -142,42 +150,84 @@ export default function Dashboard() {
         <table className="min-w-full divide-y divide-gray-700">
           <thead className="bg-gray-700">
             <tr>
-              <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left text-gray-300 uppercase transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-600" onClick={() => requestSort('username')}>
+              <th
+                className="px-6 py-3 text-xs font-semibold tracking-wider text-left text-gray-300 uppercase transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-600"
+                onClick={() => requestSort("username")}
+              >
                 Username <SortIndicator columnKey="username" />
               </th>
-              <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left text-gray-300 uppercase transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-600" onClick={() => requestSort('name')}>
+              <th
+                className="px-6 py-3 text-xs font-semibold tracking-wider text-left text-gray-300 uppercase transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-600"
+                onClick={() => requestSort("name")}
+              >
                 Name <SortIndicator columnKey="name" />
               </th>
-              <th className="px-6 py-3 text-xs font-semibold tracking-wider text-left text-gray-300 uppercase transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-600" onClick={() => requestSort('status')}>
+              <th
+                className="px-6 py-3 text-xs font-semibold tracking-wider text-left text-gray-300 uppercase transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-600"
+                onClick={() => requestSort("status")}
+              >
                 Status <SortIndicator columnKey="status" />
               </th>
-              <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">URL</th>
-              <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">States</th>
+              <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">
+                URL
+              </th>
+              <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-300 uppercase">
+                States
+              </th>
             </tr>
           </thead>
           <tbody className="bg-gray-800 divide-y divide-gray-700">
             {paginatedData.length > 0 ? (
               paginatedData.map((project) => (
-                <tr key={project.id} className="transition-all duration-300 ease-in-out hover:bg-gray-700 hover:shadow-md hover:scale-[1.01]">
-                  <td className="px-6 py-4 text-sm text-gray-300 whitespace-nowrap">{project.username}</td>
-                  <td className="px-6 py-4 text-sm text-gray-300 whitespace-nowrap">{project.name}</td>
+                <tr
+                  key={project.id}
+                  className="transition-all duration-300 ease-in-out hover:bg-gray-700 hover:shadow-md hover:scale-[1.01]"
+                >
+                  <td className="px-6 py-4 text-sm text-gray-300 whitespace-nowrap">
+                    {project.username}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-300 whitespace-nowrap">
+                    {project.name}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold leading-tight ${project.status === "Deployed"
-                        ? "bg-green-900 text-green-300 border border-green-700"
-                        : project.status === "Pending"
+                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold leading-tight ${
+                        project.status === "Deployed"
+                          ? "bg-green-900 text-green-300 border border-green-700"
+                          : project.status === "Pending"
                           ? "bg-yellow-900 text-yellow-300 border border-yellow-700"
                           : "bg-red-900 text-red-300 border border-red-700"
-                        }`}
+                      }`}
                     >
                       {project.status === "Deployed" && (
-                        <svg className="w-2.5 h-2.5 mr-1.5 text-green-400" fill="currentColor" viewBox="0 0 8 8"> <circle cx="4" cy="4" r="3" /> </svg>
+                        <svg
+                          className="w-2.5 h-2.5 mr-1.5 text-green-400"
+                          fill="currentColor"
+                          viewBox="0 0 8 8"
+                        >
+                          {" "}
+                          <circle cx="4" cy="4" r="3" />{" "}
+                        </svg>
                       )}
                       {project.status === "Pending" && (
-                        <svg className="w-2.5 h-2.5 mr-1.5 text-yellow-400" fill="currentColor" viewBox="0 0 8 8"> <circle cx="4" cy="4" r="3" /> </svg>
+                        <svg
+                          className="w-2.5 h-2.5 mr-1.5 text-yellow-400"
+                          fill="currentColor"
+                          viewBox="0 0 8 8"
+                        >
+                          {" "}
+                          <circle cx="4" cy="4" r="3" />{" "}
+                        </svg>
                       )}
                       {project.status === "Failed" && (
-                        <svg className="w-2.5 h-2.5 mr-1.5 text-red-400" fill="currentColor" viewBox="0 0 8 8"> <circle cx="4" cy="4" r="3" /> </svg>
+                        <svg
+                          className="w-2.5 h-2.5 mr-1.5 text-red-400"
+                          fill="currentColor"
+                          viewBox="0 0 8 8"
+                        >
+                          {" "}
+                          <circle cx="4" cy="4" r="3" />{" "}
+                        </svg>
                       )}
                       {project.status}
                     </span>
@@ -207,7 +257,10 @@ export default function Dashboard() {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="px-6 py-12 text-center text-gray-500">
+                <td
+                  colSpan="5"
+                  className="px-6 py-12 text-center text-gray-500"
+                >
                   No projects found.
                 </td>
               </tr>
@@ -229,10 +282,11 @@ export default function Dashboard() {
             <button
               key={page}
               onClick={() => handlePageChange(page)}
-              className={`px-4 py-2 text-sm font-medium border rounded-md shadow-sm transition-all duration-300 ease-in-out hover:shadow-md hover:scale-105 ${currentPage === page
-                ? "bg-indigo-600 text-white border-indigo-500 scale-105 shadow-lg"
-                : "text-gray-300 bg-gray-700 border-gray-600 hover:bg-gray-600"
-                }`}
+              className={`px-4 py-2 text-sm font-medium border rounded-md shadow-sm transition-all duration-300 ease-in-out hover:shadow-md hover:scale-105 ${
+                currentPage === page
+                  ? "bg-indigo-600 text-white border-indigo-500 scale-105 shadow-lg"
+                  : "text-gray-300 bg-gray-700 border-gray-600 hover:bg-gray-600"
+              }`}
             >
               {page}
             </button>
